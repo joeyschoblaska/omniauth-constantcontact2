@@ -1,6 +1,7 @@
 require 'omniauth-oauth2'
 require 'multi_json'
 require 'multi_xml'
+require 'uri'
 
 module OmniAuth
   module Strategies
@@ -54,7 +55,8 @@ module OmniAuth
       end
 
       def raw_info
-        @raw_info ||= MultiXml.parse(access_token.get("https://api.constantcontact.com/ws/customers/" + request.params['username'] + "/settings/emailaddresses").body)
+        uri = URI.encode("https://api.constantcontact.com/ws/customers/#{request.params['username']}/settings/emailaddresses")
+        @raw_info ||= MultiXml.parse(access_token.get(uri).body)
       end
     end
   end
